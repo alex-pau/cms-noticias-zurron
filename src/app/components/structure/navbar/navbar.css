@@ -1,0 +1,49 @@
+/* Variables locales para facilitar cambios globales */
+:host {
+  --nav-bg: rgba(32, 29, 35, 0.9);
+  --nav-accent: #8000ff;
+  --nav-height: 80px;
+  --logo-h: 60px;
+}
+
+.navbar-zurron {
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-height: var(--nav-height);
+  border-bottom: 2px solid rgba(33, 0, 179, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.logo-escudo {
+  height: var(--logo-h);
+  width: auto;
+}
+
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 500;
+  border-radius: 6px;
+  margin: 0 4px;
+}
+
+.nav-link:hover {
+  color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.active {
+  color: #fff !important;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Optimización para móviles */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: #1a2a40;
+    padding: 1rem;
+    border-radius: 0 0 12px 12px;
+    margin-top: 0.5rem;
+  }
+}

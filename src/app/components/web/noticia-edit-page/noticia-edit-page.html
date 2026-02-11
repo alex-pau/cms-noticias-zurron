@@ -1,0 +1,209 @@
+@if (loaded) {
+  <div class="container mt-4 mb-5">
+    <div class="row">
+
+      <div class="col-md-7">
+        <h2 class="text-primary fw-light mb-4">
+          {{ id() ? 'Editar' : 'Nueva' }} <span class="fw-bold">Noticia</span>
+        </h2>
+
+        <form [formGroup]="formNoticia" (ngSubmit)="onSubmit()">
+
+          <div class="form-floating mb-3">
+            <input type="text"
+                   class="form-control"
+                   [class.is-invalid]="titulo.invalid && (titulo.touched || titulo.dirty)"
+                   id="titulo"
+                   formControlName="titulo"
+                   placeholder="Título de la noticia">
+            <label for="titulo">Título</label>
+
+            @if (titulo.invalid && (titulo.touched || titulo.dirty)) {
+              <div class="invalid-feedback">
+                @if (titulo.errors?.['required']) { <span>El título es obligatorio.</span> }
+                @if (titulo.errors?.['minlength']) { <span>Mínimo 5 caracteres.</span> }
+                @if (titulo.errors?.['notOnlyWhiteSpace']) { <span>No puede ser solo espacios.</span> }
+              </div>
+            }
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text"
+                   class="form-control"
+                   [class.is-invalid]="subtitulo.invalid && (subtitulo.touched || subtitulo.dirty)"
+                   id="subtitulo"
+                   formControlName="subtitulo"
+                   placeholder="Subtítulo">
+            <label for="subtitulo">Subtítulo</label>
+
+            @if (subtitulo.invalid && (subtitulo.touched || subtitulo.dirty)) {
+              <div class="invalid-feedback">
+                <span>El subtítulo es obligatorio y no puede estar vacío.</span>
+              </div>
+            }
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="text"
+                   class="form-control"
+                   [class.is-invalid]="autor.invalid && (autor.touched || autor.dirty)"
+                   id="autor"
+                   formControlName="autor"
+                   placeholder="Autor">
+            <label for="autor">Autor</label>
+            @if (autor.invalid && (autor.touched || autor.dirty)) {
+              <div class="invalid-feedback">
+                <span>El autor es obligatorio.</span>
+              </div>
+            }
+          </div>
+
+          <div class="card mb-3 bg-light border-0" formGroupName="seccion">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">Sección</h6>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="secNombre" formControlName="nombre" placeholder="Nombre Sección">
+                    <label for="secNombre">Nombre Sección</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="secIcono" formControlName="icono" placeholder="Icono (bi bi-...)">
+                    <label for="secIcono">Clase Icono (ej: bi bi-star)</label>
+                  </div>
+                </div>
+              </div>
+              @if (seccion.invalid && (seccion.touched || seccion.dirty)) {
+                <small class="text-danger ps-1">Completa los datos de la sección.</small>
+              }
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label d-flex justify-content-between align-items-center">
+              Imágenes (URLs)
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="addImagen()">
+                <i class="bi bi-plus-lg"></i> Añadir URL
+              </button>
+            </label>
+
+            <div formArrayName="imagenes">
+              @for (imgControl of imagenes.controls; track $index) {
+                <div class="input-group mb-2">
+                  <span class="input-group-text">{{ $index + 1 }}</span>
+                  <input type="text"
+                         class="form-control"
+                         [formControlName]="$index"
+                         placeholder="https://ejemplo.com/imagen.jpg"
+                         [class.is-invalid]="imgControl.invalid && (imgControl.touched || imgControl.dirty)">
+
+                  <button type="button" class="btn btn-outline-danger"
+                          (click)="removeImagen($index)"
+                          [disabled]="imagenes.length === 1">
+                    <i class="bi bi-trash"></i>
+                  </button>
+
+                  @if (imgControl.invalid && (imgControl.touched || imgControl.dirty)) {
+                    <div class="invalid-feedback d-block ms-2">
+                      @if (imgControl.errors?.['required']) { URL requerida. }
+                      @if (imgControl.errors?.['isImageUrl']) { URL no válida (debe ser imagen). }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-floating mb-4">
+          <textarea class="form-control"
+                    id="contenido"
+                    formControlName="contenido"
+                    placeholder="Contenido de la noticia"
+                    style="height: 150px"></textarea>
+            <label for="contenido">Contenido</label>
+
+            @if (contenido.invalid && (contenido.touched || contenido.dirty)) {
+              <div class="invalid-feedback d-block">
+                @if (contenido.errors?.['required']) { El contenido es obligatorio. }
+                @if (contenido.errors?.['minlength']) { Mínimo 10 caracteres. }
+              </div>
+            }
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg" [disabled]="formNoticia.invalid">
+              <i class="bi bi-save me-2"></i> {{ id() ? 'Actualizar' : 'Guardar' }} Noticia
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="col-md-5 d-none d-md-block">
+        <div class="sticky-top pt-2" style="z-index: 1;">
+          <h4 class="text-muted text-center mb-3">Previsualización</h4>
+
+          <div class="card shadow border-0 overflow-hidden">
+            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px; overflow: hidden;">
+              @if (imagenes.at(0).value && imagenes.at(0).valid) {
+                <img [src]="imagenes.at(0).value"
+                     class="w-100 h-100 object-fit-cover"
+                     alt="Preview">
+              } @else {
+                <div class="text-center text-muted">
+                  <i class="bi bi-image fs-1"></i>
+                  <p class="m-0">Sin imagen válida</p>
+                </div>
+              }
+              @if (seccion.get('nombre')?.value) {
+                <span class="position-absolute top-0 end-0 m-3 badge bg-dark opacity-75">
+                             <i [class]="seccion.get('icono')?.value"></i> {{ seccion.get('nombre')?.value }}
+                         </span>
+              }
+            </div>
+
+            <div class="card-body">
+              <div class="d-flex justify-content-between small text-muted mb-2">
+                <span><i class="bi bi-person me-1"></i> {{ autor.value || 'Nombre Autor' }}</span>
+                <span>{{ formNoticia.get('fecha')?.value | date:'mediumDate' }}</span>
+              </div>
+
+              <h5 class="card-title fw-bold text-primary">
+                {{ titulo.value || 'Título de la Noticia' }}
+              </h5>
+              <h6 class="card-subtitle mb-3 text-muted">
+                {{ subtitulo.value || 'Subtítulo descriptivo...' }}
+              </h6>
+
+              <p class="card-text text-secondary">
+                {{ contenido.value || 'Aquí se mostrará el cuerpo de la noticia. Comienza a escribir para ver cómo queda el resultado final...' }}
+              </p>
+            </div>
+            <div class="card-footer bg-white border-top-0 pb-3">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-sm btn-outline-primary rounded-pill disabled">Leer más</button>
+              </div>
+            </div>
+          </div>
+
+          @if (imagenes.length > 1) {
+            <div class="row g-2 mt-2">
+              @for (img of imagenes.controls; track $index) {
+                @if ($index > 0 && img.valid) {
+                  <div class="col-3">
+                    <img [src]="img.value" class="img-thumbnail object-fit-cover" style="height: 60px; width: 100%;">
+                  </div>
+                }
+              }
+            </div>
+          }
+
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <app-loading-spinner></app-loading-spinner>
+}

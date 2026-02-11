@@ -1,0 +1,56 @@
+.footer-zurron {
+  background-color: #0f1926; /* Un azul casi negro, más profundo que la navbar */
+  color: white;
+  margin-top: auto; /* Ayuda a que se quede abajo si hay poco contenido */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Línea de acento superior (usa el color azul de tu marca) */
+.footer-accent-line {
+  height: 4px;
+  background: linear-gradient(90deg, #0056b3 0%, #00aaff 100%);
+  width: 100%;
+}
+
+.footer-logo {
+  height: 60px;
+  width: auto; /* Mantenemos el aspect ratio */
+  opacity: 0.9;
+  filter: grayscale(20%) brightness(1.2);
+}
+
+.footer-brand-text p {
+  line-height: 1.2;
+}
+
+/* Enlaces del footer */
+.footer-link {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #00aaff;
+}
+
+/* Utilidades de texto extra pequeño */
+.x-small {
+  font-size: 0.75rem;
+}
+
+.text-white-25 {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* Responsive: Ajustes para móvil */
+@media (max-width: 768px) {
+  .footer-brand-text {
+    text-align: left;
+  }
+}

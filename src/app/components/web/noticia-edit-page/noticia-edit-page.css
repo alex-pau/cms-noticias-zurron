@@ -1,0 +1,21 @@
+/* Estilo para que la imagen de preview se comporte bien */
+.object-fit-cover {
+  object-fit: cover;
+}
+
+/* Mantener el preview visible al hacer scroll */
+.sticky-top {
+  top: 2rem;
+}
+
+/* Pequeño ajuste para inputs inválidos */
+.is-invalid {
+  background-image: none !important; /* Quitar icono por defecto de bootstrap si molesta */
+}
+
+/* Separación extra para el formulario en móviles */
+@media (max-width: 768px) {
+  .col-md-5 {
+    margin-top: 2rem;
+  }
+}
