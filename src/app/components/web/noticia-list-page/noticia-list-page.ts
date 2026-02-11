@@ -42,20 +42,22 @@ export class NoticiaListPage implements OnInit {
     });
   }
 
+// BUSCA ESTA FUNCIÓN Y DÉJALA ASÍ:
   deleteNoticia(id: string) {
-    if (confirm('¿Estás seguro de que deseas borrar esta noticia?')) {
-      this.noticiaService.deleteNoticia(id).subscribe({
-        next: result => {
-          // Volvemos a cargar la lista
-          this.loadNoticias();
-          // CAMBIO: Usamos .message de la respuesta de tu API (ApiResponseMessage)
-          alert(result.message);
-        },
-        error: error => {
-          console.error('Error al borrar:', error);
-        }
-      });
-    }
+    // Eliminamos el if(confirm) porque el Modal ya sirve de confirmación
+    this.noticiaService.deleteNoticia(id).subscribe({
+      next: result => {
+        // Recargamos la lista para que desaparezca la noticia borrada
+        this.loadNoticias();
+
+        // Si tu API no devuelve un campo .message, ponemos uno por defecto
+        alert(result.message || 'Noticia eliminada con éxito');
+      },
+      error: error => {
+        console.error('Error al borrar:', error);
+        alert('No se pudo eliminar la noticia');
+      }
+    });
   }
 
   search(event: any) {

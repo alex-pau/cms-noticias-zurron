@@ -1,29 +1,33 @@
-<nav class="navbar navbar-expand-lg navbar-dark navbar-zurron fixed-top shadow-sm">
-  <div class="container-fluid px-4">
-    <a class="navbar-brand py-0" routerLink="/">
-      <img src="/assets/images/aytozurron.png"
-           alt="Ayuntamiento de Zurrón"
-           class="logo-escudo">
-    </a>
-    <button class="navbar-toggler border-0" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navMain">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navMain">
-      <ul class="navbar-nav ms-auto align-items-center">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/noticias/list"
-             routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-            <i class="bi bi-collection-play me-1"></i> Listado
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/noticias/add"
-             routerLinkActive="active">
-            <i class="bi bi-plus-circle me-1"></i> Nueva Noticia
-          </a>
-        </li>
-      </ul>
-    </div>
+<div class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-body-secondary border-end shadow-sm" style="width: 280px; min-height: 100vh;">
+  <div class="dropdown">
+    <span class="d-flex align-items-center text-dark text-decoration-none">
+      <i class="bi bi-grid me-2"></i>
+      <strong>Gestión de Noticas</strong>
+    </span>
   </div>
-</nav>
+  <hr class="text-dark">
+
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a class="nav-link text-dark"
+         routerLink="/noticias/list"
+         routerLinkActive="active bg-white shadow-sm fw-bold">
+        <i class="bi bi-list-stars me-2"></i> Lista de Noticias
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark"
+         routerLink="/noticias/add"
+         routerLinkActive="active bg-white shadow-sm fw-bold">
+        <i class="bi bi-plus-square me-2"></i> Nueva Noticia
+      </a>
+    </li>
+  </ul>
+
+  <hr class="text-dark">
+
+
+  <a routerLink="/" class="d-flex justify-content-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+    <img src="/assets/images/aytoZurronDark2.png" alt="Ayto Zurrón" class="img-fluid p-2">
+  </a>
+</div>
