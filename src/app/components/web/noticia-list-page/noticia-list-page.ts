@@ -51,16 +51,16 @@ export class NoticiaListPage implements OnInit {
       text: 'Esta acción no se puede deshacer',
       icon: 'warning',
       showCancelButton: true,
-      buttonsStyling: false, // ← Desactiva los estilos predeterminados de SweetAlert2
+      buttonsStyling: false,
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       customClass: {
-        confirmButton: 'btn btn-danger me-2', // ← Aplica clases de Bootstrap al botón confirmar
-        cancelButton: 'btn btn-secondary',     // ← Aplica clases de Bootstrap al botón cancelar
-        loader: 'custom-loader'                // ← Clase personalizada para el spinner (opcional)
+        confirmButton: 'btn btn-danger me-2',
+        cancelButton: 'btn btn-secondary',
+        loader: 'custom-loader'
       },
-      loaderHtml: '<div class="spinner-border text-danger"></div>', // ← Spinner de Bootstrap mientras carga
-      preConfirm: () => { // ← Función que se ejecuta al confirmar, ANTES de cerrar el modal
+      loaderHtml: '<div class="spinner-border text-danger"></div>',
+      preConfirm: () => {
         Swal.showLoading(); // ← Muestra el spinner (loaderHtml)
 
         // Aquí va tu lógica de eliminación

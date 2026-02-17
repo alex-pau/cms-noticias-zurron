@@ -43,6 +43,7 @@ export interface Noticia {
 }
 
 export interface Seccion {
+  _id?: string;
   nombre: string;
   icono: string;
 }
