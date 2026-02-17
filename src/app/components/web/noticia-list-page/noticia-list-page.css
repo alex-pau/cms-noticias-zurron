@@ -1,3 +1,8 @@
 .pointer:hover{
   cursor: pointer;
 }
+
+.custom-loader {
+  animation: none;
+  border-width: 0;
+}

@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import { Observable } from 'rxjs';
+
 import {
   ApiResponseNoticia,
   ApiResponseNoticias,
   ApiResponseMessage,
-  Noticia
+  Noticia, ApiResponseSecciones
 } from '../common/interfaces';
 
 @Injectable({
@@ -27,23 +28,24 @@ export class NoticiaService {
     );
   }
 
+  getSecciones(): Observable<ApiResponseSecciones> {
+    return this.httpClient.get<ApiResponseSecciones>(
+      this.urlBase + 'secciones'
+    );
+  }
+
   addNoticia(noticia: Noticia): Observable<ApiResponseMessage> {
     const { _id, ...noticiaSinId } = noticia;
-
-    return this.httpClient.post<any>(this.urlBase, noticiaSinId).pipe(
-      map(res => ({
-        status: true,
-        message: 'Noticia creada con éxito'
-      }))
+    return this.httpClient.post<ApiResponseMessage>(
+      this.urlBase,
+      noticiaSinId
     );
   }
 
   updateNoticia(id: string, noticia: Noticia): Observable<ApiResponseMessage> {
-    return this.httpClient.put<any>(`${this.urlBase}update/${id}`, noticia).pipe(
-      map(res => ({
-        status: true,
-        message: 'Noticia actualizada correctamente'
-      }))
+    return this.httpClient.put<ApiResponseMessage>(
+      this.urlBase + 'update/' + id,
+      noticia
     );
   }
 
@@ -52,4 +54,6 @@ export class NoticiaService {
       this.urlBase + 'delete/' + id
     );
   }
+
+
 }

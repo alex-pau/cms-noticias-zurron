@@ -1,6 +1,12 @@
 @if (loaded) {
   <div class="container-fluid">
     <div class="row">
+      <div class="col-12 mt-3">
+        <h2 class="text-md-start mb-3">Noticias Publicadas</h2>
+      </div>
+    </div>
+    <hr class="text-dark">
+    <div class="row">
       <div class="col-12 d-flex mt-3">
         <div class="input-group mb-3 ms-3">
           <span class="input-group-text" id="basic-addon1">
@@ -29,9 +35,19 @@
           <div class="col-md-3 my-2">
             <div class="card shadow-sm flex-grow-1 h-100">
 
-              <img [src]="noticia.imagenes[0]" [alt]="noticia.titulo"
-                   class="card-img-top"
-                   style="height: 200px; object-fit: cover;">
+              <div style="position: relative;">
+                <img [src]="noticia.imagenes[0] || '/assets/images/fotoDefecto.png'"
+                     [alt]="noticia.titulo"
+                     class="card-img-top"
+                     style="height: 200px; object-fit: cover;">
+
+                <!-- Badge de sección superpuesto sobre la imagen -->
+                <div class="position-absolute top-0 start-0 m-2 bg-white bg-opacity-75 rounded px-2 py-1"
+                     title="Sección: {{ noticia.seccion.nombre }}">
+                  <i class="bi text-secondary" [class]="noticia.seccion.icono"></i>
+                    {{noticia.seccion.nombre}}
+                </div>
+              </div>
 
               <div class="card-header d-flex justify-content-between align-items-center">
                 <div class="overflow-hidden">
@@ -41,10 +57,6 @@
                   <h6 class="card-subtitle text-primary-emphasis text-truncate">
                     {{ noticia.subtitulo }}
                   </h6>
-                </div>
-                <div class="text-center ms-2" title="Sección: {{ noticia.seccion.nombre }}">
-                  <i class="bi text-secondary" [class]="noticia.seccion.icono"></i>
-                  <small class="d-block" style="font-size: 0.6rem;">{{noticia.seccion.nombre}}</small>
                 </div>
               </div>
 
@@ -60,44 +72,17 @@
 
                 <div class="d-flex justify-content-between align-items-center mt-3">
                   <div class="btn-group w-100">
-
-                    <button type="button" class="btn btn-sm btn-outline-danger w-50">
-                      <i class="bi bi-trash"
-                         data-bs-toggle="modal"
-                         [attr.data-bs-target]="'#deleteModal'+noticia._id"></i>
+                    <button type="button"
+                            data-bs-dismiss="modal"
+                            (click)="deleteNoticia(noticia._id!)"
+                      class="btn btn-sm btn-outline-danger w-50">
+                      <i class="bi bi-trash"></i>
                     </button>
-
-                    <div class="modal fade"
-                         [attr.id]="'deleteModal'+noticia._id" tabindex="-1"
-                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header bg-danger text-white">
-                            <h5 class="modal-title" id="exampleModalLabel">Borrar Noticia</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            ¿Estás seguro de que quieres borrar la noticia:
-                            <span class="text-danger fw-bold">{{ noticia.titulo }}</span>?
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Cerrar
-                            </button>
-                            <button type="button" class="btn btn-danger"
-                                    data-bs-dismiss="modal"
-                                    (click)="deleteNoticia(noticia._id!)">BORRAR
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button type="button" [routerLink]="'/noticias/edit/'+noticia._id"
+                    <button type="button"
+                            [routerLink]="'/noticias/edit/'+noticia._id"
                             class="btn btn-sm btn-outline-secondary w-50">
                       <i class="bi bi-pencil-fill"></i>
                     </button>
-
                   </div>
                 </div>
               </div>

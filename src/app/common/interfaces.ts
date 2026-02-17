@@ -10,7 +10,7 @@ export interface ApiResponseNoticia {
 
 export interface ApiResponseSecciones {
   status: boolean;
-  data: string[];
+  secciones: Seccion[];
 }
 
 export interface ApiResponseMessage {

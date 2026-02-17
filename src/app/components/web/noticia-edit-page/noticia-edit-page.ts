@@ -1,7 +1,7 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
 import { NoticiaService } from '../../../services/noticia-service';
-import { Noticia } from '../../../common/interfaces';
+import { Noticia, Seccion } from '../../../common/interfaces';
 import { Router } from '@angular/router';
 import { FormValidators } from '../../../validators/form-validators';
 import { LoadingSpinner } from '../../structure/loading-spinner/loading-spinner';
@@ -21,14 +21,29 @@ import { DatePipe } from '@angular/common';
 export class NoticiaEditPage implements OnInit {
   id = input<string>();
 
-  private readonly noticiaService: NoticiaService =
-    inject(NoticiaService);
-  private readonly formBuilder: FormBuilder =
-    inject(FormBuilder);
-  private readonly router: Router =
-    inject(Router);
+  private readonly noticiaService: NoticiaService = inject(NoticiaService);
+  private readonly formBuilder: FormBuilder = inject(FormBuilder);
+  private readonly router: Router = inject(Router);
 
   loaded = false;
+  seccionesDisponibles: Seccion[] = [];
+  mostrarNuevaSeccion = false;
+
+  // Iconos disponibles para secciones nuevas
+  iconosDisponibles = [
+    { nombre: 'Noticias', clase: 'bi-newspaper' },
+    { nombre: 'Mundial', clase: 'bi-globe' },
+    { nombre: 'Deportes', clase: 'bi-trophy' },
+    { nombre: 'Tecnología', clase: 'bi-cpu' },
+    { nombre: 'Economía', clase: 'bi-currency-dollar' },
+    { nombre: 'Política', clase: 'bi-building' },
+    { nombre: 'Cultura', clase: 'bi-palette' },
+    { nombre: 'Ciencia', clase: 'bi-graph-up' },
+    { nombre: 'Salud', clase: 'bi-heart-pulse' },
+    { nombre: 'Educación', clase: 'bi-book' },
+    { nombre: 'Clima', clase: 'bi-cloud-sun' },
+    { nombre: 'Música', clase: 'bi-music-note-beamed' }
+  ];
 
   formNoticia: FormGroup = this.formBuilder.group({
     _id: [null],
@@ -45,17 +60,15 @@ export class NoticiaEditPage implements OnInit {
       FormValidators.notOnlyWhiteSpace
     ]],
     fecha: [new Date()],
-    // Gestión del objeto Sección (1 punto)
     seccion: this.formBuilder.group({
       nombre: ['', [Validators.required, FormValidators.notOnlyWhiteSpace]],
-      icono: ['bi bi-newspaper', [Validators.required]]
+      icono: ['bi-newspaper', [Validators.required]]
     }),
-    // Gestión de imágenes con INNOVACIÓN (1,5 puntos + 0,5 innovación)
     imagenes: this.formBuilder.array([
       this.formBuilder.control('', [
         Validators.required,
         FormValidators.notOnlyWhiteSpace,
-        FormValidators.isImageUrl // <--- INNOVACIÓN
+        FormValidators.isImageUrl
       ])
     ])
   });
@@ -69,6 +82,8 @@ export class NoticiaEditPage implements OnInit {
   get seccion(): FormGroup { return this.formNoticia.get('seccion') as FormGroup; }
 
   ngOnInit() {
+    this.loadSecciones();
+
     if (this.id()) {
       console.log('Editando ID:', this.id());
       this.loadNoticia();
@@ -76,6 +91,16 @@ export class NoticiaEditPage implements OnInit {
       console.log('Añadiendo nueva noticia');
       this.loaded = true;
     }
+  }
+
+  private loadSecciones() {
+    this.noticiaService.getSecciones().subscribe({
+      next: result => {
+        console.log('Secciones disponibles:', result);
+        this.seccionesDisponibles = result.secciones;
+      },
+      error: error => console.error(error)
+    });
   }
 
   private loadNoticia() {
@@ -97,11 +122,50 @@ export class NoticiaEditPage implements OnInit {
     });
   }
 
+  // MÉTODOS PARA MANEJAR SECCIONES
+
+  cambiarTipoSeccion(esNueva: boolean): void {
+    this.mostrarNuevaSeccion = esNueva;
+
+    if (esNueva) {
+      // Limpiar el formulario para crear nueva sección
+      this.seccion.patchValue({
+        nombre: '',
+        icono: 'bi-newspaper'
+      });
+      this.seccion.get('nombre')?.enable();
+      this.seccion.get('icono')?.enable();
+    } else {
+      // Si cambia a "usar existente", seleccionar la primera por defecto
+      if (this.seccionesDisponibles.length > 0) {
+        this.seleccionarSeccionExistente(this.seccionesDisponibles[0]);
+      }
+    }
+  }
+
+  seleccionarSeccionExistente(sec: Seccion): void {
+    this.seccion.patchValue({
+      nombre: sec.nombre,
+      icono: sec.icono
+    });
+    // Deshabilitar edición de sección existente
+    this.seccion.get('nombre')?.disable();
+    this.seccion.get('icono')?.disable();
+  }
+
+  seleccionarIcono(claseIcono: string): void {
+    this.seccion.patchValue({
+      icono: claseIcono
+    });
+  }
+
+  // MÉTODOS PARA MANEJAR IMÁGENES
+
   addImagen() {
     this.imagenes.push(this.formBuilder.control('', [
       Validators.required,
       FormValidators.notOnlyWhiteSpace,
-      FormValidators.isImageUrl // <--- INNOVACIÓN en cada nuevo input
+      FormValidators.isImageUrl
     ]));
   }
 
@@ -110,6 +174,8 @@ export class NoticiaEditPage implements OnInit {
       this.imagenes.removeAt(index);
     }
   }
+
+  // SUBMIT DEL FORMULARIO
 
   onSubmit() {
     if (this.formNoticia.invalid) {
