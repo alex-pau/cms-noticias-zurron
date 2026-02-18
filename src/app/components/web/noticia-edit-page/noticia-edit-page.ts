@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {FormValidators} from '../../../validators/form-validators';
 import {LoadingSpinner} from '../../structure/loading-spinner/loading-spinner';
 import {DatePipe, SlicePipe} from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-noticia-edit-page',
@@ -46,7 +47,7 @@ export class NoticiaEditPage implements OnInit {
   ];
 
   formNoticia: FormGroup = this.formBuilder.group({
-    _id: [''],
+    _id: [null],
     titulo: ['', [
       Validators.required,
       Validators.minLength(5),
@@ -130,20 +131,22 @@ export class NoticiaEditPage implements OnInit {
     this.noticiaService.getNoticia(id).subscribe({
       next: result => {
         console.log(result);
-        const noticia = result.data;
+        const noticia = result.noticia;  // cambia result.data por result.noticia
 
-        // Sincronizamos el FormArray de imágenes
         while (this.imagenes.length < noticia.imagenes.length) {
           this.addImagen();
         }
 
         this.formNoticia.patchValue(noticia);
+
+        // Sincronizar la sección correctamente
+        this.seleccionarSeccionExistente(noticia.seccion);
+
         this.loaded = true;
       },
       error: error => console.error(error)
     });
   }
-
 
   cambiarTipoSeccion(esNueva: boolean): void {
     this.mostrarNuevaSeccion = esNueva;
@@ -207,21 +210,61 @@ export class NoticiaEditPage implements OnInit {
         this.formNoticia.getRawValue()
       ).subscribe({
         next: value => {
-          alert(value.message);
-          this.router.navigate(['/noticia/list']);
+          Swal.fire({
+            title: 'Noticia actualizada',
+            text: value.message,
+            icon: 'success',
+            buttonsStyling: false,
+            confirmButtonText: 'Aceptar',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          }).then(() => {
+            this.router.navigate(['/noticias/list']);
+          });
         },
         error: error => {
           console.error(error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al actualizar: ' + error.message,
+            icon: 'error',
+            buttonsStyling: false,
+            confirmButtonText: 'Aceptar',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
       });
     } else {
       this.noticiaService.addNoticia(this.formNoticia.getRawValue()).subscribe({
         next: value => {
-          alert(value.message);
-          this.router.navigate(['/noticia/list']);
+          Swal.fire({
+            title: 'Noticia guardada',
+            text: value.message,
+            icon: 'success',
+            buttonsStyling: false,
+            confirmButtonText: 'Aceptar',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          }).then(() => {
+            this.router.navigate(['/noticias/list']);
+          });
         },
         error: error => {
           console.error(error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al guardar: ' + error.message,
+            icon: 'error',
+            buttonsStyling: false,
+            confirmButtonText: 'Aceptar',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
       });
     }

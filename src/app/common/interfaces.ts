@@ -5,7 +5,7 @@ export interface ApiResponseNoticias {
 
 export interface ApiResponseNoticia {
   status: boolean;
-  data: Noticia;
+  noticia: Noticia;
 }
 
 export interface ApiResponseSecciones {

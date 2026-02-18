@@ -35,10 +35,9 @@ export class NoticiaService {
   }
 
   addNoticia(noticia: Noticia): Observable<ApiResponseMessage> {
-    const { _id, ...noticiaSinId } = noticia;
     return this.httpClient.post<ApiResponseMessage>(
       this.urlBase,
-      noticiaSinId
+      noticia
     );
   }
 
@@ -48,7 +47,6 @@ export class NoticiaService {
       noticia
     );
   }
-
   deleteNoticia(id: string): Observable<ApiResponseMessage> {
     return this.httpClient.delete<ApiResponseMessage>(
       this.urlBase + 'delete/' + id
