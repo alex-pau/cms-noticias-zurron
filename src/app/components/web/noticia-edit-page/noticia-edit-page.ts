@@ -5,7 +5,7 @@ import {Noticia, Seccion} from '../../../common/interfaces';
 import {Router} from '@angular/router';
 import {FormValidators} from '../../../validators/form-validators';
 import {LoadingSpinner} from '../../structure/loading-spinner/loading-spinner';
-import {DatePipe} from '@angular/common';
+import {DatePipe, SlicePipe} from '@angular/common';
 
 @Component({
   selector: 'app-noticia-edit-page',
@@ -13,7 +13,8 @@ import {DatePipe} from '@angular/common';
   imports: [
     ReactiveFormsModule,
     LoadingSpinner,
-    DatePipe
+    DatePipe,
+    SlicePipe
   ],
   templateUrl: './noticia-edit-page.html',
   styleUrl: './noticia-edit-page.css',
@@ -74,28 +75,28 @@ export class NoticiaEditPage implements OnInit {
   });
 
   get titulo(): any {
-    return this.formNoticia.get('titulo');
-  }
+    return this.formNoticia.get('titulo')
+  };
 
   get subtitulo(): any {
-    return this.formNoticia.get('subtitulo');
-  }
+    return this.formNoticia.get('subtitulo')
+  };
 
   get autor(): any {
-    return this.formNoticia.get('autor');
-  }
+    return this.formNoticia.get('autor')
+  };
 
   get contenido(): any {
-    return this.formNoticia.get('contenido');
-  }
+    return this.formNoticia.get('contenido')
+  };
 
   get imagenes(): FormArray {
-    return this.formNoticia.get('imagenes') as FormArray;
-  }
+    return this.formNoticia.get('imagenes') as FormArray
+  };
 
   get seccion(): FormGroup {
-    return this.formNoticia.get('seccion') as FormGroup;
-  }
+    return this.formNoticia.get('seccion') as FormGroup
+  };
 
   ngOnInit() {
     this.loadSecciones();
@@ -164,11 +165,10 @@ export class NoticiaEditPage implements OnInit {
 
   seleccionarSeccionExistente(sec: Seccion): void {
     this.seccion.patchValue({
-      _id: sec._id,      // <-- Ahora incluimos el _id
+      _id: sec._id,
       nombre: sec.nombre,
       icono: sec.icono
     });
-    // Deshabilitar edición de sección existente
     this.seccion.get('nombre')?.disable();
     this.seccion.get('icono')?.disable();
   }
@@ -201,23 +201,28 @@ export class NoticiaEditPage implements OnInit {
       return;
     }
 
-    const data = this.formNoticia.getRawValue();
-
     if (this.id()) {
-      this.noticiaService.updateNoticia(this.id()!, data).subscribe({
+      this.noticiaService.updateNoticia(
+        this.formNoticia.get('_id')?.value,
+        this.formNoticia.getRawValue()
+      ).subscribe({
         next: value => {
           alert(value.message);
           this.router.navigate(['/noticia/list']);
         },
-        error: error => console.error(error)
+        error: error => {
+          console.error(error);
+        }
       });
     } else {
-      this.noticiaService.addNoticia(data).subscribe({
+      this.noticiaService.addNoticia(this.formNoticia.getRawValue()).subscribe({
         next: value => {
           alert(value.message);
           this.router.navigate(['/noticia/list']);
         },
-        error: error => console.error(error)
+        error: error => {
+          console.error(error);
+        }
       });
     }
   }

@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { NoticiaService } from '../../../services/noticia-service';
-import { Noticia } from '../../../common/interfaces';
-import { RouterLink } from '@angular/router';
+import {Component, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {NoticiaService} from '../../../services/noticia-service';
+import {Noticia} from '../../../common/interfaces';
+import {RouterLink} from '@angular/router';
 import {DatePipe, SlicePipe} from '@angular/common';
-import { LoadingSpinner } from '../../structure/loading-spinner/loading-spinner';
+import {LoadingSpinner} from '../../structure/loading-spinner/loading-spinner';
 import 'bootstrap/dist/css/bootstrap.css'
 import Swal from 'sweetalert2';
 
@@ -89,7 +89,9 @@ export class NoticiaListPage implements OnInit {
         });
       }
     });
-  }  search(event: any) {
+  }
+
+  search(event: any) {
     const word = event.target.value.toLowerCase() as string;
 
     if (word === '') {

@@ -45,7 +45,7 @@
                 <div class="position-absolute top-0 start-0 m-2 bg-white bg-opacity-75 rounded px-2 py-1"
                      title="Sección: {{ noticia.seccion.nombre }}">
                   <i class="bi text-secondary" [class]="noticia.seccion.icono"></i>
-                    {{noticia.seccion.nombre}}
+                  {{ noticia.seccion.nombre }}
                 </div>
               </div>
 
@@ -75,7 +75,7 @@
                     <button type="button"
                             data-bs-dismiss="modal"
                             (click)="deleteNoticia(noticia._id!)"
-                      class="btn btn-sm btn-outline-danger w-50">
+                            class="btn btn-sm btn-outline-danger w-50">
                       <i class="bi bi-trash"></i>
                     </button>
                     <button type="button"
