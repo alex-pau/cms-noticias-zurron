@@ -1,21 +1,17 @@
 import {Component, inject, input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray} from '@angular/forms';
 import {NoticiaService} from '../../../services/noticia-service';
-import {Noticia, Seccion} from '../../../common/interfaces';
+import {Seccion} from '../../../common/interfaces';
 import {Router} from '@angular/router';
 import {FormValidators} from '../../../validators/form-validators';
 import {LoadingSpinner} from '../../structure/loading-spinner/loading-spinner';
-import {DatePipe, SlicePipe} from '@angular/common';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-noticia-edit-page',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     LoadingSpinner,
-    DatePipe,
-    SlicePipe
   ],
   templateUrl: './noticia-edit-page.html',
   styleUrl: './noticia-edit-page.css',
@@ -31,21 +27,26 @@ export class NoticiaEditPage implements OnInit {
   seccionesDisponibles: Seccion[] = [];
   mostrarNuevaSeccion = false;
 
-  iconosDisponibles = [
-    {nombre: 'Noticias', clase: 'bi-newspaper'},
-    {nombre: 'Mundial', clase: 'bi-globe'},
-    {nombre: 'Deportes', clase: 'bi-trophy'},
-    {nombre: 'Tecnología', clase: 'bi-cpu'},
-    {nombre: 'Economía', clase: 'bi-currency-dollar'},
-    {nombre: 'Política', clase: 'bi-building'},
-    {nombre: 'Cultura', clase: 'bi-palette'},
-    {nombre: 'Ciencia', clase: 'bi-graph-up'},
-    {nombre: 'Salud', clase: 'bi-heart-pulse'},
-    {nombre: 'Educación', clase: 'bi-book'},
-    {nombre: 'Clima', clase: 'bi-cloud-sun'},
-    {nombre: 'Música', clase: 'bi-music-note-beamed'}
-  ];
+  fechaTexto: string = new Date().toLocaleDateString('es-ES');
 
+  get contenidoPreview(): string {
+    const texto = this.contenido.value || '';
+    return texto.length > 100 ? texto.substring(0, 100) + '...' : texto;
+  }
+
+  iconosDisponibles = [
+    'newspaper-outline',
+    'globe-outline',
+    'trophy-outline',
+    'hardware-chip-outline',
+    'cash-outline',
+    'business-outline',
+    'color-palette-outline',
+    'flask-outline',
+    'heart-outline',
+    'book-outline',
+    'cloudy-night-outline'
+  ];
   formNoticia: FormGroup = this.formBuilder.group({
     _id: [null],
     titulo: ['', [
@@ -64,40 +65,21 @@ export class NoticiaEditPage implements OnInit {
     seccion: this.formBuilder.group({
       _id: [null],
       nombre: ['', [Validators.required, FormValidators.notOnlyWhiteSpace]],
-      icono: ['bi-newspaper', [Validators.required]]
+      icono: ['newspaper', [Validators.required]]
     }),
     imagenes: this.formBuilder.array([
-      this.formBuilder.control('', [
-        Validators.required,
-        FormValidators.notOnlyWhiteSpace,
-        FormValidators.isImageUrl
-      ])
+      this.formBuilder.control('', [Validators.required, FormValidators.notOnlyWhiteSpace, FormValidators.isImageUrl]),
+      this.formBuilder.control('', [Validators.required, FormValidators.notOnlyWhiteSpace, FormValidators.isImageUrl]),
+      this.formBuilder.control('', [Validators.required, FormValidators.notOnlyWhiteSpace, FormValidators.isImageUrl])
     ])
   });
 
-  get titulo(): any {
-    return this.formNoticia.get('titulo')
-  };
-
-  get subtitulo(): any {
-    return this.formNoticia.get('subtitulo')
-  };
-
-  get autor(): any {
-    return this.formNoticia.get('autor')
-  };
-
-  get contenido(): any {
-    return this.formNoticia.get('contenido')
-  };
-
-  get imagenes(): FormArray {
-    return this.formNoticia.get('imagenes') as FormArray
-  };
-
-  get seccion(): FormGroup {
-    return this.formNoticia.get('seccion') as FormGroup
-  };
+  get titulo(): any { return this.formNoticia.get('titulo') };
+  get subtitulo(): any { return this.formNoticia.get('subtitulo') };
+  get autor(): any { return this.formNoticia.get('autor') };
+  get contenido(): any { return this.formNoticia.get('contenido') };
+  get imagenes(): FormArray { return this.formNoticia.get('imagenes') as FormArray };
+  get seccion(): FormGroup { return this.formNoticia.get('seccion') as FormGroup };
 
   ngOnInit() {
     this.loadSecciones();
@@ -132,14 +114,8 @@ export class NoticiaEditPage implements OnInit {
         console.log(result);
         const noticia = result.noticia;
 
-        while (this.imagenes.length < noticia.imagenes.length) {
-          this.addImagen();
-        }
-
         this.formNoticia.patchValue(noticia);
-
         this.seleccionarSeccionExistente(noticia.seccion);
-
         this.loaded = true;
       },
       error: error => console.error(error)
@@ -153,7 +129,7 @@ export class NoticiaEditPage implements OnInit {
       this.seccion.patchValue({
         _id: null,
         nombre: '',
-        icono: 'bi-newspaper'
+        icono: 'newspaper'
       });
       this.seccion.get('nombre')?.enable();
       this.seccion.get('icono')?.enable();
@@ -174,28 +150,6 @@ export class NoticiaEditPage implements OnInit {
     this.seccion.get('icono')?.disable();
   }
 
-  seleccionarIcono(claseIcono: string): void {
-    this.seccion.patchValue({
-      icono: claseIcono
-    });
-  }
-
-
-  addImagen() {
-    this.imagenes.push(this.formBuilder.control('', [
-      Validators.required,
-      FormValidators.notOnlyWhiteSpace,
-      FormValidators.isImageUrl
-    ]));
-  }
-
-  removeImagen(index: number) {
-    if (this.imagenes.length > 1) {
-      this.imagenes.removeAt(index);
-    }
-  }
-
-
   onSubmit() {
     if (this.formNoticia.invalid) {
       this.formNoticia.markAllAsTouched();
@@ -214,12 +168,8 @@ export class NoticiaEditPage implements OnInit {
             icon: 'success',
             buttonsStyling: false,
             confirmButtonText: 'Aceptar',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          }).then(() => {
-            this.router.navigate(['/noticias/list']);
-          });
+            customClass: { confirmButton: 'btn btn-success' }
+          }).then(() => { this.router.navigate(['/noticias/list']); });
         },
         error: error => {
           console.error(error);
@@ -229,9 +179,7 @@ export class NoticiaEditPage implements OnInit {
             icon: 'error',
             buttonsStyling: false,
             confirmButtonText: 'Aceptar',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
+            customClass: { confirmButton: 'btn btn-danger' }
           });
         }
       });
@@ -244,12 +192,8 @@ export class NoticiaEditPage implements OnInit {
             icon: 'success',
             buttonsStyling: false,
             confirmButtonText: 'Aceptar',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          }).then(() => {
-            this.router.navigate(['/noticias/list']);
-          });
+            customClass: { confirmButton: 'btn btn-success' }
+          }).then(() => { this.router.navigate(['/noticias/list']); });
         },
         error: error => {
           console.error(error);
@@ -259,9 +203,7 @@ export class NoticiaEditPage implements OnInit {
             icon: 'error',
             buttonsStyling: false,
             confirmButtonText: 'Aceptar',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
+            customClass: { confirmButton: 'btn btn-danger' }
           });
         }
       });

@@ -31,7 +31,7 @@ export class NoticiaListPage implements OnInit {
   private loadNoticias() {
     this.noticiaService.getNoticias().subscribe({
       next: result => {
-        this.noticiaList.set(result.data);
+        this.noticiaList.set(result.noticias);
         this.loaded = true;
       },
       error: error => {

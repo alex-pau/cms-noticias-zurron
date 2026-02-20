@@ -1,34 +1,23 @@
-<div class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-body-secondary border-end shadow-sm"
-     style="width: 280px; min-height: 100vh;">
-  <div class="dropdown">
-    <span class="d-flex align-items-center text-dark text-decoration-none">
-      <img src="/favicon.ico" alt="Logo" class="me-2" style="width: 24px; height: 24px;">
-      <strong>Noticias Zurrón CMS</strong>
-    </span>
-  </div>
-  <hr class="text-dark">
+<nav class="navbar navbar-light bg-body-secondary flex-column align-items-start p-3">
+  <a class="navbar-brand mb-3" routerLink="/">
+    <img src="/favicon.ico" alt="Logo" width="24" height="24" class="me-2">
+    Noticias Zurrón CMS
+  </a>
 
-  <ul class="nav nav-pills flex-column mb-auto">
+  <ul class="navbar-nav flex-column w-100">
     <li class="nav-item">
-      <a class="nav-link text-dark"
-         routerLink="/noticias/list"
-         routerLinkActive="active bg-white shadow-sm fw-bold">
+      <a class="nav-link" routerLinkActive="active" routerLink="/noticias/list">
         <i class="bi bi-list-stars me-2"></i> Lista de Noticias
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link text-dark"
-         routerLink="/noticias/add"
-         routerLinkActive="active bg-white shadow-sm fw-bold">
+      <a class="nav-link" routerLinkActive="active" routerLink="/noticias/add">
         <i class="bi bi-plus-square me-2"></i> Nueva Noticia
       </a>
     </li>
   </ul>
 
-  <hr class="text-dark">
-
-
-  <a routerLink="/" class="d-flex justify-content-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+  <div class="mt-auto pt-3">
     <img src="/assets/images/aytoZurronDark2.png" alt="Ayto Zurrón" class="img-fluid p-2">
-  </a>
-</div>
+  </div>
+</nav>

@@ -1,6 +1,6 @@
 export interface ApiResponseNoticias {
   status: boolean;
-  data: Noticia[];
+  noticias: Noticia[];
 }
 
 export interface ApiResponseNoticia {

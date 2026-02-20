@@ -18,7 +18,7 @@ export class NoticiaService {
 
   getNoticias(): Observable<ApiResponseNoticias> {
     return this.httpClient.get<ApiResponseNoticias>(
-      this.urlBase + 'page?page=1&limit=10'
+      this.urlBase
     );
   }
 
