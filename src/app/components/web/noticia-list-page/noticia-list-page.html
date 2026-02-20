@@ -41,7 +41,6 @@
                      class="card-img-top"
                      style="height: 200px; object-fit: cover;">
 
-                <!-- Badge de sección superpuesto sobre la imagen -->
                 <div class="position-absolute top-0 start-0 m-2 bg-white bg-opacity-75 rounded px-2 py-1"
                      title="Sección: {{ noticia.seccion.nombre }}">
                   <i class="bi text-secondary" [class]="noticia.seccion.icono"></i>
@@ -73,7 +72,6 @@
                 <div class="d-flex justify-content-between align-items-center mt-3">
                   <div class="btn-group w-100">
                     <button type="button"
-                            data-bs-dismiss="modal"
                             (click)="deleteNoticia(noticia._id!)"
                             class="btn btn-sm btn-outline-danger w-50">
                       <i class="bi bi-trash"></i>

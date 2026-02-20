@@ -4,7 +4,6 @@ import {Noticia} from '../../../common/interfaces';
 import {RouterLink} from '@angular/router';
 import {DatePipe, SlicePipe} from '@angular/common';
 import {LoadingSpinner} from '../../structure/loading-spinner/loading-spinner';
-import 'bootstrap/dist/css/bootstrap.css'
 import Swal from 'sweetalert2';
 
 @Component({
@@ -22,7 +21,6 @@ import Swal from 'sweetalert2';
 export class NoticiaListPage implements OnInit {
   private readonly noticiaService: NoticiaService = inject(NoticiaService);
 
-  // Usamos el Signal con la interfaz Noticia
   noticiaList: WritableSignal<Noticia[]> = signal<Noticia[]>([]);
   loaded = false;
 
@@ -33,19 +31,18 @@ export class NoticiaListPage implements OnInit {
   private loadNoticias() {
     this.noticiaService.getNoticias().subscribe({
       next: result => {
-        // CAMBIO CLAVE: Ahora usamos .data porque tu interfaz es ApiResponseNoticias
-        // result es de tipo ApiResponseNoticias, y dentro tiene .data (el array)
         this.noticiaList.set(result.data);
         this.loaded = true;
       },
       error: error => {
-        console.error('Error al cargar noticias:', error);
+        console.error(error);
       }
     });
   }
 
 
   deleteNoticia(id: string) {
+    //innovacion sweetalerts
     Swal.fire({
       title: '¿Eliminar noticia?',
       text: 'Esta acción no se puede deshacer',
@@ -61,20 +58,19 @@ export class NoticiaListPage implements OnInit {
       },
       loaderHtml: '<div class="spinner-border text-danger"></div>',
       preConfirm: () => {
-        Swal.showLoading(); // ← Muestra el spinner (loaderHtml)
+        Swal.showLoading();
 
-        // Aquí va tu lógica de eliminación
         return this.noticiaService.deleteNoticia(id).toPromise()
           .then(result => {
-            return result; // ← Devuelve el resultado para usarlo en .then()
+            return result;
           })
           .catch(error => {
             Swal.showValidationMessage(`Error: ${error.message || 'No se pudo eliminar'}`);
-            throw error; // ← Muestra error sin cerrar el modal
+            throw error;
           });
       }
     }).then((result) => {
-      if (result.isConfirmed) { // ← Solo entra aquí si preConfirm se completó exitosamente
+      if (result.isConfirmed) {
         this.loadNoticias();
 
         Swal.fire({
@@ -99,7 +95,6 @@ export class NoticiaListPage implements OnInit {
       return;
     }
 
-    // Filtro mejorado siguiendo la lógica del profesor pero aplicada a tus campos
     this.noticiaList.update(noticias => noticias.filter(
       n =>
         n.titulo.toLowerCase().includes(word) ||

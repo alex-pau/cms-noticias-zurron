@@ -62,7 +62,7 @@ export class NoticiaEditPage implements OnInit {
     ]],
     fecha: [new Date()],
     seccion: this.formBuilder.group({
-      _id: [null], // <--- IMPORTANTE: Si no está aquí, Angular lo borra al enviar
+      _id: [null],
       nombre: ['', [Validators.required, FormValidators.notOnlyWhiteSpace]],
       icono: ['bi-newspaper', [Validators.required]]
     }),
@@ -117,7 +117,6 @@ export class NoticiaEditPage implements OnInit {
         console.log('Secciones disponibles:', result);
         this.seccionesDisponibles = result.secciones;
 
-        // Seleccionar la primera sección por defecto al cargar
         if (this.seccionesDisponibles.length > 0 && !this.mostrarNuevaSeccion) {
           this.seleccionarSeccionExistente(this.seccionesDisponibles[0]);
         }
@@ -131,7 +130,7 @@ export class NoticiaEditPage implements OnInit {
     this.noticiaService.getNoticia(id).subscribe({
       next: result => {
         console.log(result);
-        const noticia = result.noticia;  // cambia result.data por result.noticia
+        const noticia = result.noticia;
 
         while (this.imagenes.length < noticia.imagenes.length) {
           this.addImagen();
@@ -139,7 +138,6 @@ export class NoticiaEditPage implements OnInit {
 
         this.formNoticia.patchValue(noticia);
 
-        // Sincronizar la sección correctamente
         this.seleccionarSeccionExistente(noticia.seccion);
 
         this.loaded = true;
@@ -153,12 +151,12 @@ export class NoticiaEditPage implements OnInit {
 
     if (esNueva) {
       this.seccion.patchValue({
-        _id: null, // Aseguramos que sea null para que el backend cree uno nuevo
+        _id: null,
         nombre: '',
         icono: 'bi-newspaper'
       });
       this.seccion.get('nombre')?.enable();
-      this.seccion.get('icono')?.enable(); // Habilitar selectores de icono
+      this.seccion.get('icono')?.enable();
     } else {
       if (this.seccionesDisponibles.length > 0) {
         this.seleccionarSeccionExistente(this.seccionesDisponibles[0]);
