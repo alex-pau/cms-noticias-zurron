@@ -1,3 +1,25 @@
-textarea{
-  height:20vh;
+.textarea-contenido {
+  height: 150px;
+  resize: vertical;
+}
+
+.preview-sidebar {
+  position: sticky;
+  top: 3.5vh;
+  align-self: flex-start;
+}
+
+.imagen-wrapper {
+  position: relative;
+}
+
+.preview-img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.thumbnail-img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
 }

@@ -6,3 +6,12 @@
   animation: none;
   border-width: 0;
 }
+
+.card-img-wrapper {
+  position: relative;
+}
+
+.noticia-img {
+  height: 200px;
+  object-fit: cover;
+}

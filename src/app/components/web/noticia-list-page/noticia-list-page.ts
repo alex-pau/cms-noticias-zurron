@@ -42,7 +42,7 @@ export class NoticiaListPage implements OnInit {
 
 
   deleteNoticia(id: string) {
-    //innovacion sweetalerts
+    //innovacion: sweetalerts
     Swal.fire({
       title: '¿Eliminar noticia?',
       text: 'Esta acción no se puede deshacer',
@@ -87,6 +87,7 @@ export class NoticiaListPage implements OnInit {
     });
   }
 
+  //innovacion: funcion de busqueda
   search(event: any) {
     const word = event.target.value.toLowerCase() as string;
 
